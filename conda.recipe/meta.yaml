@@ -1,0 +1,51 @@
+package:
+  name: virusnet
+  version: 0.1.0
+
+source:
+  path: .
+
+requirements:
+  host:
+    - python
+    - r-base
+    - r-devtools
+    - r-optparse
+    - r-zoo=
+    - h5py
+    - keras
+    - tensorflow
+
+  run:
+    - python
+    - r-base
+    - r-devtools
+    - r-optparse
+    - r-zoo
+    - h5py
+    - keras
+    - tensorflow
+
+test:
+  commands:
+    - bash ${RECIPE_DIR}/tests/run_test.sh
+
+build:
+  noarch: python
+
+about:
+  home: https://github.com/genomenet/virusnet
+  license: MIT
+  license_file: LICENSE
+  summary: A package for classifying virus using deep learning models.
+  description: |
+    VirusNet is a package that uses machine learning models to classify virus genus based on genomic sequences. 
+    The model has been trained on high quality genomes from the International Committee on Taxonomy of Viruses (ICTV),
+    including an 'other' category, and currently achieves a balanced accuracy of 79.4% with 404 categories.
+    The model consists of 16 million parameters and 6 convolutional neural network (CNN) layers. 
+    It was trained on a data-center GPU for approximately 10 days to achieve convergence. 
+    To use VirusNet, simply provide your genomic sequence in FASTA format. 
+    VirusNet will then process your data and generate predictions for the genus taxonomy of your virus based on its genomic sequence.
+    It is important to note that the model is not perfect and may occasionally make mistakes. 
+    Therefore, we encourage you to interpret the results of your predictions with caution and to seek additional information if necessary.
+
