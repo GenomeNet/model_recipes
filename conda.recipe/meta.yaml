@@ -1,38 +1,44 @@
 package:
   name: virusnet
-  version: 0.1.0
+  version: 0.0.1
 
 source:
-  path: .
+  path: ../virusnet/
 
 requirements:
   host:
-    - python
-    - r-base
-    - r-devtools
-    - r-optparse
-    - r-zoo=
-    - h5py
-    - keras
-    - tensorflow
+    - python =3.11.4
+    - numpy >=1.17.0
+    - r-base =4.3.1
+    - r-devtools =2.4.5
+    - r-optparse =1.7.3
+    - r-zoo =1.8_12
+    - h5py =3.9.0
+    - keras =2.12.0
+    - tensorflow =2.12.1
 
   run:
-    - python
-    - r-base
-    - r-devtools
-    - r-optparse
-    - r-zoo
-    - h5py
-    - keras
-    - tensorflow
+    - python =3.11.4
+    - numpy >=1.17.0
+    - r-base =4.3.1
+    - r-devtools =2.4.5
+    - r-optparse =1.7.3
+    - r-zoo =1.8_12
+    - h5py =3.9.0
+    - keras =2.12.0
+    - tensorflow =2.12.1
 
 test:
   commands:
-    - bash ${RECIPE_DIR}/tests/run_test.sh
+    - virusnet --help
 
 build:
   noarch: python
-
+  script_env:
+    - VIRUSNET_GENUS_MODEL_PATH
+  scripts:
+      post-link: post-link.sh    # Executes after the package is installed
+      pre-unlink: pre-unlink.sh  # Executes before the package is removed
 about:
   home: https://github.com/genomenet/virusnet
   license: MIT
@@ -40,12 +46,4 @@ about:
   summary: A package for classifying virus using deep learning models.
   description: |
     VirusNet is a package that uses machine learning models to classify virus genus based on genomic sequences. 
-    The model has been trained on high quality genomes from the International Committee on Taxonomy of Viruses (ICTV),
-    including an 'other' category, and currently achieves a balanced accuracy of 79.4% with 404 categories.
-    The model consists of 16 million parameters and 6 convolutional neural network (CNN) layers. 
-    It was trained on a data-center GPU for approximately 10 days to achieve convergence. 
-    To use VirusNet, simply provide your genomic sequence in FASTA format. 
-    VirusNet will then process your data and generate predictions for the genus taxonomy of your virus based on its genomic sequence.
-    It is important to note that the model is not perfect and may occasionally make mistakes. 
-    Therefore, we encourage you to interpret the results of your predictions with caution and to seek additional information if necessary.
-
+    The model has been trained on high quality genomes from the International Committee on Taxonomy of Viruses (ICTV).

@@ -1,6 +1,14 @@
 #!/bin/bash
+set -e
 
-$R CMD INSTALL --build .
+mkdir -p $PREFIX/bin
 
-# Download the model
-wget -P $PREFIX/lib/virusnet https://f000.backblazeb2.com/file/genomenet/models/virus_genus_2023-01-23.hdf5
+# Install the Python script
+echo "Installing the scripts..."
+cp $SRC_DIR/virusnet.py $PREFIX/bin/virusnet  # copy it to the bin directory
+cp $SRC_DIR/download_model.py $PREFIX/bin/download_model  # copy it to the bin directory
+cp $SRC_DIR/predict.r $PREFIX/bin/predict.r  # copy it to the bin directory
+
+# Make the script executable
+chmod +x $PREFIX/bin/virusnet
+chmod +x $PREFIX/bin/download_model

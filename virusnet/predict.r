@@ -1,3 +1,5 @@
+#!/usr/bin/env Rscript
+
 # Suppress TF messages
 Sys.setenv(TF_CPP_MIN_LOG_LEVEL = 3)
 
