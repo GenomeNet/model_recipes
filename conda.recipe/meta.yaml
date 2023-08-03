@@ -1,6 +1,6 @@
 package:
   name: virusnet
-  version: 0.0.1
+  version: 0.0.4
 
 source:
   path: ../virusnet/
@@ -12,6 +12,7 @@ requirements:
     - r-base =4.3.1
     - r-devtools =2.4.5
     - r-optparse =1.7.3
+    - r-remotes
     - r-zoo =1.8_12
     - h5py =3.9.0
     - keras =2.12.0
@@ -23,6 +24,7 @@ requirements:
     - r-base =4.3.1
     - r-devtools =2.4.5
     - r-optparse =1.7.3
+    - r-remotes
     - r-zoo =1.8_12
     - h5py =3.9.0
     - keras =2.12.0
@@ -34,11 +36,8 @@ test:
 
 build:
   noarch: python
-  script_env:
-    - VIRUSNET_GENUS_MODEL_PATH
   scripts:
-      post-link: post-link.sh    # Executes after the package is installed
-      pre-unlink: pre-unlink.sh  # Executes before the package is removed
+      post-link: post-link.sh
 about:
   home: https://github.com/genomenet/virusnet
   license: MIT

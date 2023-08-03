@@ -14,7 +14,6 @@ def run_prediction(model='genus', input='test.fasta', output='prediction.csv', s
 
     # Define the command that you would use to run the R script from the command line
     command = ["Rscript", r_script_path, 
-               '--model', model, 
                '--input', input,
                '--output', output,
                '--step', str(step),
@@ -23,12 +22,9 @@ def run_prediction(model='genus', input='test.fasta', output='prediction.csv', s
     # Run the command
     subprocess.run(command)
 
-
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Run virus predictions.')
-    parser.add_argument('-m', '--model', type=str, default='genus',
-                        help='model to use (genus/binary)')
     parser.add_argument('-i', '--input', type=str, default='test.fasta',
                         help='Input fasta file.')
     parser.add_argument('-o', '--output', type=str, default='prediction.csv',
@@ -40,4 +36,4 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    run_prediction(model=args.model, input=args.input, output=args.output, step=args.step, batch_size=args.batch_size)
+    run_prediction(input=args.input, output=args.output, step=args.step, batch_size=args.batch_size)
