@@ -1,0 +1,21 @@
+# Ignore the build directory
+build/
+
+# Environment Configurations
+.env
+.DS_Store
+
+# IDE/Editor folders
+.idea/
+.vscode/
+
+
+# OS generated files
+Thumbs.db
+.DS_Store
+
+# Other temporary or generated files
+*.tmp
+*.bak
+*.swp
+*.swo
