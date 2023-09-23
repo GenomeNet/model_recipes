@@ -9,6 +9,8 @@ build/
 .idea/
 .vscode/
 
+# Log
+labbook.md
 
 # OS generated files
 Thumbs.db
