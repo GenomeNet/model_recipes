@@ -31,11 +31,9 @@ option_list <- list(
 opt_parser <- OptionParser(option_list = option_list)
 opt <- parse_args(opt_parser)
 
-
 # Functions
 predict_and_write <- function(opt, model, genus_labels, tmp_file) {
   if (!file.exists(opt$input)) stop("Input file not found")
-  
   pred <- predict_model(
     output_format = "one_seq",
     model = model,
@@ -57,28 +55,32 @@ predict_and_write <- function(opt, model, genus_labels, tmp_file) {
   write.table(df, file = opt$output, sep = "\t",
   row.names = FALSE, quote = FALSE)
 
-  return(pred)
+  # Validate the prediction DataFrame
+  if (is.null(df) || nrow(df) == 0) {
+    stop("Prediction failed. The resulting data frame is empty.")
+  }
+  return(df)
 }
 
-print_top_predictions <- function(pred) {
-  df <- data.frame(pred$states)
+print_top_predictions <- function(df) {
+  # aggregate
   agg <- colMeans(df)
   agg_o <- agg[order(agg, decreasing = TRUE)]
   message("Top 5 predictions of the sample:")
-  for (i in 1:5){
+  for (i in 1:5) {
     message(paste0("Predicted FASTA sample as ",
     names(agg_o[i]), " (" , round(agg_o[i] * 100, digits = 1), "%)"))
   }
 }
 
-model_path <- paste0(Sys.getenv("CONDA_PREFIX"), "/lib/virusnet/virus_genus_2023-01-23.hdf5")
-annotation_path <- paste0(Sys.getenv("CONDA_PREFIX"), "/lib/virusnet/virus_genus_2023-01-23_labels.rds")
-tmp_file <- tempfile(fileext = ".h5")
-
 # Define paths
 model_path <- paste0(Sys.getenv("CONDA_PREFIX"), "/lib/virusnet/virus_genus_2023-01-23.hdf5")
 annotation_path <- paste0(Sys.getenv("CONDA_PREFIX"), "/lib/virusnet/virus_genus_2023-01-23_labels.rds")
 tmp_file <- tempfile(fileext = ".h5")
+
+# Validate the model and annotation paths
+if (!file.exists(model_path)) stop("Model file not found")
+if (!file.exists(annotation_path)) stop("Annotation file not found")
 
 # Load model and annotations
 message("Loading model and processing file")
@@ -92,11 +94,10 @@ genus_labels <- readRDS(annotation_path)
 # Predict
 message("Predicting sequence")
 pred <- predict_and_write(opt, model, genus_labels, tmp_file)
-message("Done")
 
 # Display top 5 predictions
 print_top_predictions(pred)
 
 # Cleanup
-file.remove(tmp_file)
+invisible(file.remove(tmp_file))
 message(paste0("Wrote predictions to ", opt$output))
