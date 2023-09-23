@@ -17,8 +17,6 @@ requirements:
     - h5py =3.9.0
     - keras =2.12.0
     - tensorflow-gpu =2.12.1
-    - cudatoolkit
-    - cudnn
 
   run:
     - python =3.11.4
@@ -31,8 +29,6 @@ requirements:
     - h5py =3.9.0
     - keras =2.12.0
     - tensorflow-gpu =2.12.1
-    - cudatoolkit
-    - cudnn
 
 test:
   commands:
