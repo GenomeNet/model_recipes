@@ -33,6 +33,10 @@ requirements:
 test:
   commands:
     - virusnet --help
+  files:
+    - tests/test.fasta 
+  script:
+    - run_test.sh 
 
 build:
   noarch: python
