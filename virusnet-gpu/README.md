@@ -1,6 +1,6 @@
-# VirusNet
+# VirusNet (GPU version)
 
-[![Anaconda-Server Badge](https://anaconda.org/genomenet/virusnet/badges/version.svg)](https://anaconda.org/genomenet/virusnet) [![Anaconda-Server Badge](https://anaconda.org/genomenet/virusnet/badges/latest_release_relative_date.svg)](https://anaconda.org/genomenet/virusnet)
+[![Anaconda-Server Badge](https://anaconda.org/genomenet/virusnet-gpu/badges/version.svg)](https://anaconda.org/genomenet/virusnet-gpu) [![Anaconda-Server Badge](https://anaconda.org/genomenet/virusnet/badges/latest_release_relative_date.svg)](https://anaconda.org/genomenet/virusnet)
 
 VirusNet is a package that uses machine learning models to classify virus genus based on genomic sequences. The model has been trained on high-quality genomes from the International Committee on Taxonomy of Viruses (ICTV).
 
@@ -10,7 +10,7 @@ To install VirusNet, you can use conda:
 
 ```
 
-conda install -c genomenet virusnet
+conda install -c genomenet virusnet-gpu
 ```
 
 ### **Usage**
