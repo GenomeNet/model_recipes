@@ -1,0 +1,14 @@
+Glob /home/pmuench/model_recipes/virusnet-gpu/conda.recipe/conda.recipe did not match in root_dir /home/pmuench/model_recipes/virusnet-gpu/conda.recipe
+ERROR:conda_build.utils:Glob /home/pmuench/model_recipes/virusnet-gpu/conda.recipe/conda.recipe did not match in root_dir /home/pmuench/model_recipes/virusnet-gpu/conda.recipe
+Updating build index: /home/pmuench/miniconda3/conda-bld
+
+Traceback (most recent call last):
+  File "/home/pmuench/miniconda3/bin/conda-mambabuild", line 10, in <module>
+    sys.exit(main())
+  File "/home/pmuench/miniconda3/lib/python3.9/site-packages/boa/cli/mambabuild.py", line 256, in main
+    call_conda_build(action, config)
+  File "/home/pmuench/miniconda3/lib/python3.9/site-packages/boa/cli/mambabuild.py", line 228, in call_conda_build
+    result = api.build(
+  File "/home/pmuench/miniconda3/lib/python3.9/site-packages/conda_build/api.py", line 178, in build
+    raise ValueError(f'No valid recipes found for input: {recipe_paths_or_metadata}')
+ValueError: No valid recipes found for input: conda.recipe
