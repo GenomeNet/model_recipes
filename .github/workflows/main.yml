@@ -29,13 +29,14 @@ jobs:
         uses: conda-incubator/setup-miniconda@v2
         with:
           activate-environment: test-env
-          environment-file: environment.yml  # If you have an environment.yml file, else remove this line
           python-version: ${{ matrix.python-version }}
           auto-activate-base: true
 
       - name: Install Package
         shell: bash -l {0}
         run: |
+          conda create --name test-env python=${{ matrix.python-version }}
+          conda activate test-env
           conda install -c genomenet virusnet
 
       - name: Run Tests
