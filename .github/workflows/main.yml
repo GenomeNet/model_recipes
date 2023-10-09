@@ -25,19 +25,21 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Set up Conda
-        run: |
-          echo $CONDA/bin >> $GITHUB_PATH
-          conda create -n test-env python=${{ matrix.python-version }}
-          conda activate test-env
+      - name: Set up Miniconda
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: test-env
+          environment-file: environment.yml  # If you have an environment.yml file, else remove this line
+          python-version: ${{ matrix.python-version }}
+          auto-activate-base: true
 
-      - name: Install Dependencies and Package
+      - name: Install Package
+        shell: bash -l {0}
         run: |
-          conda activate test-env
           conda install -c genomenet virusnet
 
       - name: Run Tests
+        shell: bash -l {0}
         run: |
-          conda activate test-env
           chmod +x conda.recipe/run_test.sh
           conda.recipe/run_test.sh
