@@ -42,4 +42,4 @@ jobs:
         run: |
           mamba create --name test-env python=${{ matrix.python-version }}
           conda activate test-env
-          mamba install -c genomenet virusnet
+          mamba install -c genomenet -c conda-forge virusnet
