@@ -44,13 +44,27 @@ jobs:
           conda activate test-env
           mamba install -c genomenet -c conda-forge virusnet
 
-      - name: Check virusnet
+      - name: Test deepG availability
+        shell: bash -l {0}
+        run: |
+          result=$(Rscript -e "pkgs <- installed.packages(); cat(any(pkgs[,'Package'] == 'deepG'))")
+          if [ "$result" = "FALSE" ]; then
+            echo "deepG package is not installed in R" && exit 1
+          else
+            echo "deepG package is installed in R"
+          fi
+
+      - name: Test virusnet help
         shell: bash -l {0}
         run: |
           virusnet -h
 
-      - name: Run Tests
+      - name: Test virusnet prediction
         shell: bash -l {0}
         run: |
-          chmod +x virusnet/conda.recipe/run_test.sh
-          virusnet/conda.recipe/run_test.sh
+          virusnet -i virusnet/tests/test.fasta -o test_output.csv
+          if [[ ! -s test_output.csv ]]; then
+            echo "Output file is empty, test failed" && exit 1
+          else
+            echo "Output file is non-empty, test passed"
+          fi
