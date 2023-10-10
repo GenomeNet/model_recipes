@@ -44,7 +44,7 @@ jobs:
           conda activate test-env
           mamba install -c genomenet -c conda-forge virusnet
 
-      - name: Check binary
+      - name: Check virusnet
         shell: bash -l {0}
         run: |
           virusnet -h
@@ -52,5 +52,5 @@ jobs:
       - name: Run Tests
         shell: bash -l {0}
         run: |
-          chmod +x conda.recipe/run_test.sh
-          conda.recipe/run_test.sh
+          chmod +x virusnet/conda.recipe/run_test.sh
+          virusnet/conda.recipe/run_test.sh
