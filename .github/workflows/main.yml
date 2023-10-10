@@ -38,6 +38,17 @@ jobs:
         run: |
           conda install -c anaconda libarchive
 
+      - name: Set Library Path (macOS only)
+          if: runner.os == 'macOS'
+          run: echo "DYLD_LIBRARY_PATH=$(echo $DYLD_LIBRARY_PATH):/usr/local/miniconda/envs/test-env/lib" >> $GITHUB_ENV
+
+      - name: Debug Library Paths (macOS only)
+      if: runner.os == 'macOS'
+      shell: bash -l {0}
+      run: |
+    echo $DYLD_LIBRARY_PATH
+    ls /usr/local/miniconda/envs/test-env/lib
+
       - name: Install Mamba
         shell: bash -l {0}
         run: |
