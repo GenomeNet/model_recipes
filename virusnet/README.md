@@ -9,12 +9,12 @@ VirusNet is a package that uses machine learning models to classify virus genus 
 To install VirusNet, you can use conda:
 
 ```
-conda create --name genomenet_virusnet python=3.11
+conda create --name genomenet_virusnet python=3.11 -y
 conda activate genomenet_virusnet
 ```
 
 ```
-conda install -c genomenet virusnet
+conda install -c genomenet virusnet -y
 ```
 
 ### **Usage**
