@@ -1,0 +1,44 @@
+package:
+  name: imputation
+  version: 0.0.3
+
+source:
+  path: ../imputation/
+
+requirements:
+  host:
+    - python >=3.11,<3.12.0a0
+    - numpy >=1.17.0
+    - r-base >=4.3.1
+    - r-devtools
+    - r-optparse
+    - r-zoo
+    - h5py =3.9.0
+    - keras =2.12.0
+    - tensorflow =2.12.1
+
+  run:
+    - python >=3.11,<3.12.0a0
+    - numpy >=1.17.0
+    - r-base >=4.3.1
+    - r-devtools
+    - r-optparse
+    - r-zoo
+    - h5py =3.9.0
+    - keras =2.12.0
+    - tensorflow =2.12.1
+
+test:
+  commands:
+    - impute --help
+
+build:
+  noarch: python
+
+about:
+  home: https://github.com/GenomeNet/model_recipes/imputation
+  license: MIT
+  license_file: LICENSE
+  summary: A package for imputing missing nucleotides using deep learning models.
+  description: |
+    The imputation model can be used to replace ambiguous nucleotides (denoted as N) with the most likely nucleotide sequence based on the input sequence data. To use our webserver, simply upload your FASTA file with ambiguous nucleotides using the file upload feature on our website. Our imputation model will then process your data and impute the ambiguous nucleotides with the most likely nucleotide sequence based on the information contained in your FASTA sequence. We take great care to ensure that our imputation model is both accurate and efficient, and we are confident that it will be a valuable tool for your research and analysis needs. However, it is important to note that our model is not perfect and may occasionally make mistakes. Therefore, we encourage you to interpret the results of your imputed sequence with caution and to seek additional information if necessary.
