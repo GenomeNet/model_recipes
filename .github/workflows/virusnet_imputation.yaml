@@ -1,0 +1,70 @@
+name: Imputation Conda Package CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ['3.11.0', '3.11.4']
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Set up Miniconda
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: test-env
+          python-version: ${{ matrix.python-version }}
+          auto-activate-base: true
+
+      - name: Install Mamba
+        shell: bash -l {0}
+        run: |
+          conda install mamba -c conda-forge
+
+      - name: Install Package with Mamba
+        shell: bash -l {0}
+        run: |
+          mamba create --name test-env python=${{ matrix.python-version }}
+          conda activate test-env
+          mamba install -c genomenet -c conda-forge imputation
+
+      - name: Test deepG availability
+        shell: bash -l {0}
+        run: |
+          result=$(Rscript -e "pkgs <- installed.packages(); cat(any(pkgs[,'Package'] == 'deepG'))")
+          if [ "$result" = "FALSE" ]; then
+            echo "deepG package is not installed in R" && exit 1
+          else
+            echo "deepG package is installed in R"
+          fi
+
+      - name: Test virusnet help
+        shell: bash -l {0}
+        run: |
+          impute -h
+
+      - name: Test virusnet prediction
+        shell: bash -l {0}
+        run: |
+          impute -i virusnet/tests/test.fasta -o test_output.fasta
+          if [[ ! -s test_output.fasta ]]; then
+            echo "Output file is empty, test failed" && exit 1
+          else
+            echo "Output file is non-empty, test passed"
+          fi
