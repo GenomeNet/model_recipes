@@ -98,12 +98,9 @@ if (!file.exists(model_path)) {
   stop(paste("Model file not found for", opt$model, "at", model_path))
 }
 
-# Load model and annotations
-message("Loading model ", opt$model)
+# Load model
 model <- load_cp(model_path)
 
 # Predict
 message("Predicting sequence")
 predict_and_write(opt, model, layer_name)
-
-message(paste0("Wrote states to ", opt$output))

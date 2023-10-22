@@ -1,6 +1,6 @@
 package:
   name: interpretation
-  version: 0.0.8
+  version: 0.1.0
 
 source:
   path: ../interpretation/
@@ -41,6 +41,6 @@ about:
   home: https://github.com/genomenet/virusnet
   license: MIT
   license_file: LICENSE
-  summary: A package for interpreting sequence regions of unkown origin
+  summary: A package for interpreting sequence regions of unkown origin.
   description: |
     Exporting the hidden states of various deepG models for further interpretation

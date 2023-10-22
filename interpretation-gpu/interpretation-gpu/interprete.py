@@ -4,7 +4,6 @@ import os
 import subprocess
 import argparse
 import requests
-import tensorflow as tf
 
 MODEL_URLS = {
     'genus': 'https://f000.backblazeb2.com/file/genomenet/models/virus_genus_2023-01-23.hdf5',
@@ -63,6 +62,7 @@ def run_prediction(input='test.fasta', output='states.csv', model='genus', step=
                '--output', output,
                '--model', model,
                '--step', str(step),
+               '--model_folder', model_folder,
                '--batch_size', str(batch_size)]
 
     # Run the command
