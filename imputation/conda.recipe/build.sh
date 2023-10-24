@@ -2,7 +2,8 @@
 set -e
 
 # Download necessary files
-wget -P $PREFIX/lib/impute https://f000.backblazeb2.com/file/bioinf/models/model_imputation_maxlen100.hdf5
+#wget -P $PREFIX/lib/impute https://f000.backblazeb2.com/file/bioinf/models/model_imputation_maxlen100.hdf5
+wget -P $PREFIX/lib/impute https://f000.backblazeb2.com/file/bioinf/bert_bact_150_flatten.h5
 
 mkdir -p $PREFIX/bin
 

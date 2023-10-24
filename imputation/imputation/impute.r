@@ -31,8 +31,8 @@ option_list <- list(
 opt_parser <- OptionParser(option_list = option_list)
 opt <- parse_args(opt_parser)
 # Define paths
-message(paste0(Sys.getenv("CONDA_PREFIX"), "/lib/impute/model_imputation_maxlen100.hdf5"))
-model_path <- paste0(Sys.getenv("CONDA_PREFIX"), "/lib/impute/model_imputation_maxlen100.hdf5")
+message(paste0(Sys.getenv("CONDA_PREFIX"), "/lib/impute/bert_bact_150_flatten.h5"))
+model_path <- paste0(Sys.getenv("CONDA_PREFIX"), "/lib/impute/bert_bact_150_flatten.h5")
 tmp_file <- tempfile(fileext = ".h5")
 
 # Validate the model and annotation paths
@@ -40,7 +40,7 @@ if (!file.exists(model_path)) stop("Model file not found")
 
 # Load model and annotations
 message("Loading model and processing file")
-model <- keras::load_model_hdf5(model_path, compile = FALSE)
+model <- load_cp(model_path)
 # Predict
 message("Predicting sequence")
 
@@ -49,12 +49,12 @@ len <- nchar(sequence)
 
 #### start prediction
 
-maxlen <- 100
+maxlen <- 150
 message("Processing FASTA file")
 pred <- predict_model(vocabulary = c("a", "c", "g", "t", "n"),
                       output_format = "one_seq",
                       model = model,
-                      layer_name = "flatten_4",
+                      layer_name = "flatten",
                       sequence = sequence,
                       round_digits = 4,
                       filename = NULL,
@@ -64,14 +64,15 @@ pred <- predict_model(vocabulary = c("a", "c", "g", "t", "n"),
                       return_states = TRUE,
                       padding = "standard",
                       mode = "label",
-                      format = "fasta")
+                      format = "fasta", 
+                      return_int = TRUE)
 
 
 if (len > maxlen) {
   pred1 <- predict_model(vocabulary = c("a", "c", "g", "t", "n"),
                       output_format = "one_seq",
                       model = model,
-                      layer_name = "flatten_4",
+                      layer_name = "flatten",
                       sequence = substr(sequence, len - maxlen + 1, len),
                       round_digits = 4,
                       filename = NULL,
@@ -81,7 +82,8 @@ if (len > maxlen) {
                       return_states = TRUE,
                       padding = "standard",
                       mode = "label",
-                      format = "fasta")
+                      format = "fasta",
+                      return_int = TRUE)
 } else{
   k <- (maxlen - len) * 4
 }
