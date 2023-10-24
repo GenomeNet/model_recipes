@@ -4,6 +4,7 @@ import pandas as pd
 import argparse
 import os
 from BCBio import GFF
+import matplotlib.pyplot as plt
 
 def build_index(input_file, output_file):
     df = pd.read_csv(input_file, skiprows=1)
@@ -49,6 +50,30 @@ def get_annotation(position, features):
     return "NA", "NA"
 
 
+def plot(data_file, output_file):
+    df = pd.read_csv(data_file)
+    
+    # Round the values
+    df['Similarity'] = df['Similarity'].round(2)
+    
+    fig, ax = plt.subplots()
+    
+    # Plot a line graph with reduced line width
+    ax.plot(df['Position'], df['Similarity'], linestyle='-', marker='', color='b', linewidth=0.7)
+    
+    # Hide x-axis labels and set x-axis label
+    ax.set_xticks([])
+    ax.set_xlabel("Genome Position")
+    ax.set_ylabel("Similarity")
+    
+    # Configure grid and layout
+    ax.grid(True, which='both', linestyle='--', linewidth=0.5)
+    plt.tight_layout()
+    
+    # Save to the specified output file
+    plt.savefig(output_file, format='pdf')
+    plt.show()
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Query tool for indexing, extracting, and searching vectors.")
     
@@ -72,12 +97,21 @@ if __name__ == "__main__":
     search_parser.add_argument("--gff", type=str, help="Path to the GFF file for annotation.")
     search_parser.add_argument("--output", type=str, required=True, help="Path to the output file where results will be saved.")
 
+    # Add the "plot" parser
+    plot_parser = subparsers.add_parser('plot')
+    plot_parser.add_argument("data_file", type=str, help="Path to the data file (CSV).")
+    plot_parser.add_argument("--output", type=str, required=True, help="Path to the output PDF file.")
+
     args = parser.parse_args()
 
     if args.command == "index":
         build_index(args.input, args.output)
     elif args.command == "extract":
         extract_vector(args.input, args.position, args.output)
+    
+    elif args.command == "plot":
+        plot(args.data_file, args.output)
+
     elif args.command == "search":
         # Load the saved index
         index = faiss.read_index(args.input)
@@ -115,4 +149,5 @@ if __name__ == "__main__":
             file.write("Position,Similarity,Feature Type,Description\n")  # Header line
             for position, value in sorted_results:
                 feature_type, description = get_annotation(position+1, features)
+                description = description.replace(",", ";")
                 file.write(f"{position + 1},{value},{feature_type},{description}\n")
