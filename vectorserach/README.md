@@ -6,6 +6,12 @@ Will write the neuron responses of a input file when doing infrerence with a gen
 
 ### This software requires the output of the interprete package (see https://anaconda.org/GenomeNet/interpretation). Please run this first to generate the csv file.
 
+## Installation
+
+```
+conda install -c genomenet vectorsearch -y
+```
+
 ## Usage
 
 First, index the output csv file of the `interprete run` command
