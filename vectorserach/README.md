@@ -1,15 +1,14 @@
-# Perform vectorsearch on a GenomeNet mode
+# Performs vector search on a GenomeNet model
 
-Will write the neuron responses of a input file when doing infrerence with a genomenet model to an output file for further analysis and interpretation.
-
-## Requirements
-
-### This software requires the output of the interprete package (see https://anaconda.org/GenomeNet/interpretation). Please run this first to generate the csv file.
+Performs similarit search of a query vector with the hidden states of a GenomeNet model. This software requires the output of the Interprete package (see https://anaconda.org/GenomeNet/interpretation). Please run this first to generate the csv file.
 
 ## Installation
 
 ```
-conda install -c genomenet vectorsearch -y
+conda create -n genomenet_vectorsearch python=3.11 -y
+conda activate genomenet_vectorsearch
+mamba install -c genomenet -c conda-forge vectorsearch -y
+vectorsearch -h # See help file
 ```
 
 ## Usage
