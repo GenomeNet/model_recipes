@@ -1,0 +1,35 @@
+package:
+  name: vectorsearch
+  version: 0.0.1
+
+source:
+  path: ../vectorsearch/
+
+requirements:
+  host:
+    - python >=3.6,<3.12.0a0
+    - numpy >=1.17.0
+    - setuptools
+
+  run:
+    - python >=3.6,<3.12.0a0
+    - numpy >=1.17.0
+    - faiss
+    - pandas
+    - matplotlib
+    - bcbio-gff
+
+test:
+  commands:
+    - vectorsearch -h
+
+build:
+  noarch: python
+
+about:
+  home: https://github.com/GenomeNet/model_recipes/tree/main/vectorsearch
+  license: MIT
+  license_file: LICENSE
+  summary: A package for performing vectorsearch on GenomeNet models.
+  description: |
+    Compares the hidden states with a query vector and generates visualizations
