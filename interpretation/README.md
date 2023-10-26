@@ -69,9 +69,5 @@ python vectorsearch.py plotsim --input output.csv --states genome_states_genomen
 You can also visualize the query vector
 
 ```
-python vectorsearch.py plotsim --input output.csv --states genome_states_genomenet.csv --output plot.pdf
-```
-
-```
 python vectorsearch.py plotvector test_vector1.csv --output test_out.pdf
 ```
