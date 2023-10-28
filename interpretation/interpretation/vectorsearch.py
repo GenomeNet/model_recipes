@@ -5,6 +5,8 @@ import argparse
 import os
 from BCBio import GFF
 import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
+from matplotlib.backends.backend_pdf import PdfPages
 
 def build_index(input_file, output_file):
     df = pd.read_csv(input_file, skiprows=1)
@@ -36,6 +38,8 @@ def parse_gff(gff_file):
     with open(gff_file, 'r') as file:
         for rec in GFF.parse(file):
             for feature in rec.features:
+                if feature.type == "region":  # Skip the 'region' feature
+                    continue
                 start = int(feature.location.start) + 1
                 end = int(feature.location.end)
                 feature_type = feature.type
@@ -48,7 +52,6 @@ def get_annotation(position, features):
         if start <= position <= end:
             return feature_type, description
     return "NA", "NA"
-
 
 def plot(data_file, output_file):
     df = pd.read_csv(data_file)
@@ -72,6 +75,90 @@ def plot(data_file, output_file):
     
     # Save to the specified output file
     plt.savefig(output_file, format='pdf')
+    plt.show()
+
+def plot_vector(vector_file, output_file):
+    # Load the vector data from CSV
+    vector = pd.read_csv(vector_file)["Value"].values.reshape(1, -1)
+
+    fig, ax = plt.subplots(figsize=(10, 2))
+    
+    # Display the heatmap
+    cax = ax.imshow(vector, aspect='auto', cmap='viridis', norm=mcolors.Normalize(vmin=-1, vmax=1))
+    
+    # Hide y-ticks and labels
+    ax.set_yticks([])
+    ax.set_xlabel('Vector Dimension')
+    ax.set_title('1-D Heatmap of Query Vector')
+    
+    # Add colorbar
+    cbar = fig.colorbar(cax, orientation='vertical', pad=0.01)
+    cbar.set_label('Value')
+    
+    plt.tight_layout()
+    plt.savefig(output_file, format='pdf')
+    plt.show()
+
+import matplotlib.pyplot as plt
+import pandas as pd
+import matplotlib.colors as mcolors
+
+def plot_similar_vectors(search_output, data_file, output_file):
+    # Load the search output data
+    df_search = pd.read_csv(search_output)
+    
+    # Extract data from the input data file
+    data = pd.read_csv(data_file, skiprows=1).values.astype('float32')
+    
+    # Determine the range for the heatmap
+    abs_max_value = max(np.abs(data).max(), 1e-10)
+
+    # Sort the DataFrame based on the similarity values
+    top_5_positions = df_search.sort_values(by="Similarity", ascending=False).head(5)["Position"].values - 1
+    top_similarities = df_search.sort_values(by="Similarity", ascending=False).head(5)["Similarity"].values
+    
+    # Randomly sample 5 positions (excluding top 5 hits)
+    random_positions = df_search.loc[~df_search["Position"].isin(top_5_positions + 1)].sample(5)["Position"].values - 1
+    
+    # Create a 3-row subplot
+    fig, (ax1, ax2, ax3) = plt.subplots(nrows=3, figsize=(12, 15))
+    
+    # Display heatmap of top 5 hits
+    cax1 = ax1.imshow(data[top_5_positions], aspect='auto', cmap='viridis', norm=mcolors.Normalize(vmin=-abs_max_value, vmax=abs_max_value))
+    y_labels_top = [f'Hit {i+1} (Similarity: {sim:.2f})' for i, sim in enumerate(top_similarities)]
+    ax1.set_yticks(range(len(y_labels_top)))
+    ax1.set_yticklabels(y_labels_top)
+    ax1.set_title('Top 5 Similar Vectors')
+    
+    # Add horizontal black lines to separate heatmap rows
+    for y in range(1, 5):
+        ax1.axhline(y - 0.5, color='black', lw=0.5)
+    
+    # Highlight the query in the heatmap
+    ax1.axhline(0.5, color='black', lw=3)  
+    
+    # Display heatmap of random vectors
+    cax2 = ax2.imshow(data[random_positions], aspect='auto', cmap='viridis', norm=mcolors.Normalize(vmin=-abs_max_value, vmax=abs_max_value))
+    y_labels_random = [f'Random {i+1}' for i in range(5)]
+    ax2.set_yticks(range(len(y_labels_random)))
+    ax2.set_yticklabels(y_labels_random)
+    ax2.set_title('5 Random Vectors')
+    
+    # Add horizontal black lines to separate heatmap rows
+    for y in range(1, 5):
+        ax2.axhline(y - 0.5, color='black', lw=0.5)
+    
+    # Overview plot
+    ax3.plot(df_search['Position'], df_search['Similarity'], lw=0.5, color='grey', label="Similarity")
+    ax3.scatter(random_positions + 1, df_search.loc[df_search["Position"].isin(random_positions + 1), "Similarity"], s=20, c='green', label="Random 5 Hits", zorder=3) 
+    ax3.scatter(top_5_positions + 1, top_similarities, s=10, c='red', label="Top 5 Hits")  
+    ax3.set_xlabel('Genome Position')
+    ax3.set_ylabel('Similarity')
+    ax3.legend()
+    ax3.set_title('Hits along the genome')
+    
+    plt.tight_layout()
+    plt.savefig(output_file)
     plt.show()
 
 if __name__ == "__main__":
@@ -102,6 +189,17 @@ if __name__ == "__main__":
     plot_parser.add_argument("data_file", type=str, help="Path to the data file (CSV).")
     plot_parser.add_argument("--output", type=str, required=True, help="Path to the output PDF file.")
 
+    # Add the "plotvector" parser
+    plotvector_parser = subparsers.add_parser('plotvector')
+    plotvector_parser.add_argument("vector_file", type=str, help="Path to the vector file (CSV).")
+    plotvector_parser.add_argument("--output", type=str, required=True, help="Path to the output PDF file.")
+
+    # Add the "plotsim" parser
+    plotsim_parser = subparsers.add_parser('plotsim')
+    plotsim_parser.add_argument("--input", type=str, required=True, help="Path to the search output file (CSV).")
+    plotsim_parser.add_argument("--states", type=str, required=True, help="Path to the data file (CSV) containing all vectors.")
+    plotsim_parser.add_argument("--output", type=str, required=True, help="Path to the output PDF file.")
+
     args = parser.parse_args()
 
     if args.command == "index":
@@ -109,8 +207,14 @@ if __name__ == "__main__":
     elif args.command == "extract":
         extract_vector(args.input, args.position, args.output)
     
+    if args.command == "plotvector":
+        plot_vector(args.vector_file, args.output)
+
     elif args.command == "plot":
         plot(args.data_file, args.output)
+
+    if args.command == "plotsim":
+        plot_similar_vectors(args.input, args.states, args.output)
 
     elif args.command == "search":
         # Load the saved index
@@ -128,11 +232,10 @@ if __name__ == "__main__":
             features = parse_gff(args.gff)
 
         # Print the top 5 results to the screen without sorting
-        print("\nTop 5 Similarities:")
-        for position, value in results[:5]:
+        print("\nTop 30 Similarities:")
+        for position, value in results[:30]:
             rounded_value = round(value, 2)
             feature_type, description = get_annotation(position+1, features)
-            
             annotation = ""
             if feature_type != "NA":
                 annotation = f" | {feature_type} (product={description})"
