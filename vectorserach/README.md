@@ -5,7 +5,7 @@ Performs similarit search of a query vector with the hidden states of a GenomeN
 ## Installation
 
 ```
-conda create -n genomenet_vectorsearch python=3.11 -y
+conda create -n genomenet_vectorsearch python=3.10.13 -y
 conda activate genomenet_vectorsearch
 mamba install -c genomenet -c conda-forge vectorsearch -y
 vectorsearch -h # See help file
